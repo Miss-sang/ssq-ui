@@ -31,7 +31,7 @@ export default defineConfig({
     nav: [
       { text: '指南', link: '/guide/introduction' },
       { text: '组件', link: '/components/button' },
-      { text: 'GitHub', link: '' }
+      { text: 'GitHub', link: 'https://github.com/Miss-sang/ssq-ui' }
     ],
     sidebar: {
       '/guide/': [
@@ -66,7 +66,7 @@ export default defineConfig({
         }
       ]
     },
-    socialLinks: [{ icon: 'github', link: '' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/Miss-sang/ssq-ui' }],
     footer: {
       message: '基于 MIT License 发布。',
       copyright: 'Copyright © 2025 ssq-ui'

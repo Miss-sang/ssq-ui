@@ -4,9 +4,6 @@
 
 `ssq-ui` 是一个基于 `Vue 3 + TypeScript` 构建的组件库项目，聚焦基础组件、弹层基础设施、运行时主题系统。项目当前包含 `Button`、`Input`、`Icon`、`Space`、`Dialog`、`Select`、`ConfigProvider` 和 `useTheme` 等能力。
 
-- 文档站点：
-- 仓库地址：
-
 
 ## 特性概览
 
