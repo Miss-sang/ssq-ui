@@ -1,0 +1,201 @@
+:root {
+  --vp-c-brand-1: var(--my-color-primary);
+  --vp-c-brand-2: var(--my-color-primary-light-1);
+  --vp-c-brand-3: var(--my-color-primary-dark-1);
+  --vp-c-brand-soft: var(--my-color-primary-light-5);
+  --vp-c-success-1: #67c23a;
+  --vp-c-warning-1: #e6a23c;
+  --vp-c-danger-1: #f56c6c;
+  --vp-radius: 4px;
+  --vp-radius-large: 8px;
+  --vp-font-family-base:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', sans-serif;
+  --vp-font-family-mono: 'SFMono-Regular', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
+}
+
+.dark {
+  --vp-c-brand-1: var(--my-color-primary-light-1);
+  --vp-c-brand-2: var(--my-color-primary);
+  --vp-c-brand-3: var(--my-color-primary-light-2);
+  --vp-c-brand-soft: color-mix(in srgb, var(--my-color-primary) 24%, transparent);
+}
+
+body,
+.VPApp,
+.theme-lab,
+.theme-lab-section {
+  --my-font-family-base: var(--vp-font-family-base);
+  --my-font-family-mono: var(--vp-font-family-mono);
+}
+
+body,
+.VPApp,
+.theme-lab {
+  font-family: var(--my-font-family-base);
+}
+
+.theme-lab pre {
+  font-family: var(--my-font-family-mono);
+}
+
+.vp-doc .demoblock.demoblock-custom {
+  margin: 16px 0;
+  border-color: color-mix(in srgb, var(--vp-c-border) 84%, var(--vp-c-brand-1));
+  border-radius: var(--vp-radius-large);
+  background: var(--vp-c-bg);
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+}
+
+.dark .vp-doc .demoblock.demoblock-custom {
+  box-shadow: 0 22px 48px rgba(2, 6, 23, 0.22);
+}
+
+.vp-doc .demoblock.demoblock-custom .demoblock-view {
+  padding: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  background: var(--vp-c-bg);
+}
+
+.vp-doc .demoblock.demoblock-custom .demoblock-divider--horizontal {
+  border-top-color: var(--vp-c-divider);
+}
+
+.vp-doc .demoblock.demoblock-custom .demoblock-op-btns {
+  padding: 8px 16px;
+  background: var(--vp-c-bg-soft);
+}
+
+.vp-doc .demoblock.demoblock-custom .demoblock-source {
+  border-top: 1px solid var(--vp-c-divider);
+  background: var(--vp-code-block-bg);
+}
+
+.vp-doc .demoblock.demoblock-custom .demoblock-source .highlight {
+  margin: 0;
+  background: transparent;
+}
+
+.vp-doc .demoblock.demoblock-custom .demoblock-source div[class*='language-'] {
+  margin: 0;
+  border-radius: 0;
+}
+
+.vp-doc .demoblock.demoblock-custom .demoblock-control {
+  margin-top: 0;
+  padding: 8px 16px;
+  border-top: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.vp-doc .demoblock.demoblock-custom .demoblock-control:hover {
+  background: var(--vp-c-bg-alt);
+  color: var(--vp-c-brand-1);
+}
+
+body {
+  background-color: var(--vp-c-bg);
+}
+
+.VPLocalNav,
+.VPSidebar,
+.VPSidebar .curtain {
+  background-color: var(--vp-sidebar-bg-color);
+}
+
+.VPLocalNav {
+  z-index: var(--vp-z-index-local-nav);
+  background-color: var(--vp-local-nav-bg-color);
+}
+
+.VPLocalNav .container {
+  background-color: inherit;
+}
+
+.VPLocalNav .menu,
+.VPLocalNavOutlineDropdown button {
+  background: transparent;
+}
+
+.VPLocalNavOutlineDropdown {
+  position: relative;
+  z-index: 1;
+}
+
+.VPLocalNavOutlineDropdown .items {
+  z-index: calc(var(--vp-z-index-local-nav) + 1);
+  background-color: var(--vp-c-gutter);
+  border-color: var(--vp-c-border);
+  box-shadow: var(--vp-shadow-3);
+}
+
+.VPLocalNavOutlineDropdown .header,
+.VPLocalNavOutlineDropdown .outline {
+  background-color: var(--vp-c-bg-soft);
+}
+
+.VPSidebar .nav {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+.VPDocAsideOutline .content {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--vp-c-bg) 96%, transparent) 0,
+    transparent 100%
+  );
+}
+
+.VPDocOutlineItem .outline-link,
+.VPLocalNavOutlineDropdown .top-link {
+  background: transparent;
+}
+
+.vp-code .line-numbers {
+  opacity: 0.4;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vp-c-divider);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vp-c-brand-1);
+}
+
+.vp-doc h1 {
+  letter-spacing: 0.01em;
+}
+
+.vp-doc h2 {
+  margin: 32px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.vp-doc h3 {
+  margin: 24px 0 12px;
+}
+
+.VPFeature .title {
+  font-weight: 700;
+}

@@ -1,0 +1,68 @@
+/* 鑹插僵鍙橀噺 - 涓昏壊/涓€ц壊/鍔熻兘鑹蹭綋绯?*/
+:root {
+  /* ========== 涓昏壊锛堝搧鐗岃壊锛?========== */
+  --my-color-primary: #1890ff; /* 涓昏壊 */
+  --my-color-primary-light-1: #40a9ff; /* 娴?绾?*/
+  --my-color-primary-light-2: #69c0ff; /* 娴?绾?*/
+  --my-color-primary-light-3: #91d5ff; /* 娴?绾?*/
+  --my-color-primary-light-4: #b8e6ff; /* 娴?绾?*/
+  --my-color-primary-light-5: #e6f7ff; /* 娴?绾?*/
+  --my-color-primary-dark-1: #096dd9; /* 娣?绾?*/
+  --my-color-primary-dark-2: #0050b3; /* 娣?绾?*/
+  --my-color-primary-dark-3: #003a8c; /* 娣?绾?*/
+  --my-color-primary-dark-4: #002766; /* 娣?绾?*/
+
+  /* ========== 涓€ц壊锛堟枃鏈?鑳屾櫙/杈规锛?========== */
+  --my-color-white: #ffffff;
+  --my-color-black: #000000;
+
+  --my-color-gray-1: #f9f9f9;
+  --my-color-gray-2: #f2f2f2;
+  --my-color-gray-3: #e5e5e5;
+  --my-color-gray-4: #d9d9d9;
+  --my-color-gray-5: #bfbfbf;
+  --my-color-gray-6: #8c8c8c;
+  --my-color-gray-7: #595959;
+  --my-color-gray-8: #434343;
+  --my-color-gray-9: #262626;
+  --my-color-gray-10: #1f1f1f;
+
+  /* ========== 鍔熻兘鑹诧紙鐘舵€侊級 ========== */
+  /* 鎴愬姛 */
+  --my-color-success: #52c41a;
+  --my-color-success-light: #73d13d;
+  --my-color-success-dark: #389e0d;
+
+  /* 璀﹀憡 */
+  --my-color-warning: #faad14;
+  --my-color-warning-light: #ffc53d;
+  --my-color-warning-dark: #d48806;
+
+  /* 鍗遍櫓/閿欒 */
+  --my-color-danger: #f5222d;
+  --my-color-danger-light: #ff4d4f;
+  --my-color-danger-dark: #cf1322;
+
+  /* 淇℃伅 */
+  --my-color-info: #1890ff; /* 鍜屼富鑹蹭竴鑷?*/
+
+  /* ========== 鏂囨湰鑹?========== */
+  --my-text-color-primary: var(--my-color-gray-9); /* 涓昏鏂囨湰 */
+  --my-text-color-secondary: var(--my-color-gray-7); /* 娆¤鏂囨湰 */
+  --my-text-color-placeholder: var(--my-color-gray-5); /* 鍗犱綅鏂囨湰 */
+  --my-text-color-disabled: var(--my-color-gray-5); /* 绂佺敤鏂囨湰 */
+
+  /* ========== 鑳屾櫙鑹?========== */
+  --my-bg-color-page: var(--my-color-white); /* 椤甸潰鑳屾櫙 */
+  --my-bg-color-container: var(--my-color-white); /* 瀹瑰櫒鑳屾櫙 */
+  --my-surface-elevated: var(--my-color-white); /* 娴眰鑳屾櫙 */
+  --my-bg-color-hover: var(--my-color-gray-1); /* 鎮诞鑳屾櫙 */
+  --my-bg-color-active: var(--my-color-gray-2); /* 婵€娲昏儗鏅?*/
+  --my-bg-color-disabled: var(--my-color-gray-2); /* 绂佺敤鑳屾櫙 */
+  --my-overlay-bg: rgba(15, 23, 42, 0.45); /* 寮圭獥閬僵 */
+
+  /* ========== 杈规鑹?========== */
+  --my-border-color-base: var(--my-color-gray-3); /* 鍩虹杈规 */
+  --my-border-color-light: var(--my-color-gray-2); /* 娴呰壊杈规 */
+  --my-border-color-dark: var(--my-color-gray-4); /* 娣辫壊杈规 */
+}

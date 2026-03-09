@@ -1,0 +1,51 @@
+.my-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--my-icon-size);
+  height: var(--my-icon-size);
+  font-size: var(--my-icon-size);
+  line-height: 1;
+  color: var(--my-icon-color);
+  vertical-align: middle;
+  flex-shrink: 0;
+  transition:
+    color var(--my-transition-duration-base) var(--my-transition-timing-function-base),
+    transform var(--my-transition-duration-base) var(--my-transition-timing-function-base);
+}
+
+.my-icon__font,
+.my-icon__svg {
+  display: block;
+  width: 1em;
+  height: 1em;
+  font-size: inherit;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.my-icon__font {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.my-icon__svg {
+  overflow: visible;
+  fill: currentColor;
+}
+
+.my-icon.is-spin .my-icon__font,
+.my-icon.is-spin .my-icon__svg {
+  animation: my-icon-spin 1s linear infinite;
+}
+
+@keyframes my-icon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

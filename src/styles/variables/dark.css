@@ -1,0 +1,75 @@
+/* 鏆楅粦妯″紡鍙橀噺瑕嗙洊 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* 涓昏壊閫傞厤鏆楅粦 */
+    --my-color-primary: #40a9ff;
+    --my-color-primary-light-1: #69c0ff;
+    --my-color-primary-dark-1: #096dd9;
+
+    /* 涓€ц壊鍙嶈浆 */
+    --my-color-gray-1: #1f1f1f;
+    --my-color-gray-2: #262626;
+    --my-color-gray-3: #434343;
+    --my-color-gray-4: #595959;
+    --my-color-gray-5: #8c8c8c;
+    --my-color-gray-6: #bfbfbf;
+    --my-color-gray-7: #d9d9d9;
+    --my-color-gray-8: #e5e5e5;
+    --my-color-gray-9: #f2f2f2;
+    --my-color-gray-10: #f9f9f9;
+
+    /* 鏂囨湰鑹查€傞厤 */
+    --my-text-color-primary: var(--my-color-gray-9);
+    --my-text-color-secondary: var(--my-color-gray-7);
+    --my-text-color-placeholder: var(--my-color-gray-5);
+
+    /* 鑳屾櫙鑹查€傞厤 */
+    --my-bg-color-page: #141414;
+    --my-bg-color-container: var(--my-color-gray-1);
+    --my-surface-elevated: #1b1f27;
+    --my-bg-color-hover: var(--my-color-gray-2);
+    --my-bg-color-active: var(--my-color-gray-3);
+    --my-bg-color-disabled: var(--my-color-gray-2);
+    --my-overlay-bg: rgba(0, 0, 0, 0.6);
+
+    /* 杈规鑹查€傞厤 */
+    --my-border-color-base: var(--my-color-gray-3);
+    --my-border-color-light: var(--my-color-gray-2);
+    --my-border-color-dark: var(--my-color-gray-4);
+  }
+}
+
+/* 鎵嬪姩鍒囨崲鏆楅粦妯″紡鐨勭被鍚嶏紙鍏ㄥ眬鍒囨崲鐢級 */
+html.dark {
+  /* 澶嶇敤鏆楅粦妯″紡鍙橀噺 */
+  --my-color-primary: #40a9ff;
+  --my-color-primary-light-1: #69c0ff;
+  --my-color-primary-dark-1: #096dd9;
+
+  --my-color-gray-1: #1f1f1f;
+  --my-color-gray-2: #262626;
+  --my-color-gray-3: #434343;
+  --my-color-gray-4: #595959;
+  --my-color-gray-5: #8c8c8c;
+  --my-color-gray-6: #bfbfbf;
+  --my-color-gray-7: #d9d9d9;
+  --my-color-gray-8: #e5e5e5;
+  --my-color-gray-9: #f2f2f2;
+  --my-color-gray-10: #f9f9f9;
+
+  --my-text-color-primary: var(--my-color-gray-9);
+  --my-text-color-secondary: var(--my-color-gray-7);
+  --my-text-color-placeholder: var(--my-color-gray-5);
+
+  --my-bg-color-page: #141414;
+  --my-bg-color-container: var(--my-color-gray-1);
+  --my-surface-elevated: #1b1f27;
+  --my-bg-color-hover: var(--my-color-gray-2);
+  --my-bg-color-active: var(--my-color-gray-3);
+  --my-bg-color-disabled: var(--my-color-gray-2);
+  --my-overlay-bg: rgba(0, 0, 0, 0.6);
+
+  --my-border-color-base: var(--my-color-gray-3);
+  --my-border-color-light: var(--my-color-gray-2);
+  --my-border-color-dark: var(--my-color-gray-4);
+}

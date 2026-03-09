@@ -1,0 +1,10 @@
+/* 样式入口 - 引入所有基础样式和Token */
+@import './reset.css';
+@import './variables/base.css';
+@import './variables/colors.css';
+@import './variables/dark.css';
+
+/* 全局过渡样式 */
+.my-transition {
+  transition: all var(--my-transition-duration-base) var(--my-transition-timing-function-base);
+}

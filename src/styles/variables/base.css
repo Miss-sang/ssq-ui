@@ -1,0 +1,53 @@
+/* 鍩虹甯冨眬鍙橀噺 - 8px鏍呮牸绯荤粺锛堣涓氭爣鍑嗭級 */
+:root {
+  /* 闂磋窛 - 鎵€鏈夐棿璺濋兘鏄?px鐨勫€嶆暟 */
+  --my-spacing-xs: 4px; /* 0.5鍊?*/
+  --my-spacing-sm: 8px; /* 1鍊?*/
+  --my-spacing-md: 16px; /* 2鍊?*/
+  --my-spacing-lg: 24px; /* 3鍊?*/
+  --my-spacing-xl: 32px; /* 4鍊?*/
+
+  /* 鍦嗚 */
+  --my-border-radius-xs: 2px;
+  --my-border-radius-sm: 4px;
+  --my-border-radius-md: 8px;
+  --my-border-radius-lg: 16px;
+  --my-border-radius-circle: 50%;
+
+  /* 瀛椾綋 */
+  --my-font-family-base: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', sans-serif;
+  --my-font-family-mono: 'SF Mono', Monaco, Consolas, 'Courier New', monospace;
+
+  --my-font-size-xs: 12px;
+  --my-font-size-sm: 14px;
+  --my-font-size-base: 16px;
+  --my-font-size-lg: 18px;
+  --my-font-size-xl: 20px;
+
+  --my-font-weight-regular: 400;
+  --my-font-weight-medium: 500;
+  --my-font-weight-bold: 600;
+
+  --my-line-height-base: 1.5;
+
+  /* 杈规 */
+  --my-border-width-base: 1px;
+  --my-border-style-base: solid;
+
+  /* 闃村奖 */
+  --my-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --my-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --my-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+  --my-shadow-xl: 0 16px 32px rgba(15, 23, 42, 0.18);
+
+  /* 灞傜骇 */
+  --my-z-index-modal: 2000;
+  --my-z-index-popup: 2100;
+
+  /* 杩囨浮 */
+  --my-transition-duration-base: 0.2s;
+  --my-transition-timing-function-base: ease-in-out;
+  --my-motion-ripple-duration: 0.6s;
+  --my-motion-spin-duration: 1s;
+}

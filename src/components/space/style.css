@@ -1,0 +1,17 @@
+.my-space {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: var(--my-space-flex-wrap);
+  align-items: var(--my-space-align-items);
+  column-gap: var(--my-space-column-gap);
+  row-gap: var(--my-space-row-gap);
+  max-width: 100%;
+}
+
+.my-space--vertical {
+  flex-direction: column;
+}
+
+.my-space__item {
+  min-width: 0;
+}

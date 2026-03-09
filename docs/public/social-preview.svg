@@ -1,0 +1,38 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" rx="36" fill="#F8FAFC" />
+  <rect x="42" y="42" width="1116" height="546" rx="32" fill="url(#paint0_linear)" />
+  <circle cx="192" cy="170" r="118" fill="#60A5FA" fill-opacity="0.24" />
+  <circle cx="1016" cy="468" r="136" fill="#2DD4BF" fill-opacity="0.22" />
+  <rect x="126" y="134" width="534" height="362" rx="28" fill="#0F172A" fill-opacity="0.92" stroke="#1E293B" stroke-width="2" />
+  <rect x="172" y="192" width="210" height="56" rx="18" fill="url(#paint1_linear)" />
+  <rect x="400" y="192" width="198" height="56" rx="18" fill="#1E293B" />
+  <rect x="172" y="282" width="442" height="166" rx="24" fill="#111827" stroke="#1F2937" stroke-width="2" />
+  <rect x="208" y="316" width="176" height="118" rx="18" fill="#F8FAFC" />
+  <rect x="420" y="318" width="144" height="18" rx="9" fill="#334155" />
+  <rect x="420" y="354" width="116" height="18" rx="9" fill="#334155" />
+  <rect x="420" y="390" width="92" height="18" rx="9" fill="#334155" />
+  <rect x="208" y="344" width="116" height="22" rx="11" fill="#1890FF" />
+  <rect x="208" y="382" width="92" height="18" rx="9" fill="#93C5FD" />
+  <rect x="736" y="154" width="314" height="82" rx="26" fill="white" fill-opacity="0.82" />
+  <rect x="770" y="188" width="104" height="16" rx="8" fill="#1890FF" />
+  <rect x="888" y="188" width="128" height="16" rx="8" fill="#0F766E" />
+  <rect x="736" y="262" width="314" height="124" rx="26" fill="white" fill-opacity="0.84" />
+  <rect x="770" y="302" width="164" height="18" rx="9" fill="#0F172A" />
+  <rect x="770" y="336" width="226" height="14" rx="7" fill="#475569" />
+  <rect x="736" y="412" width="314" height="84" rx="26" fill="#0F172A" fill-opacity="0.92" />
+  <text x="126" y="96" fill="#0F172A" font-size="30" font-family="Segoe UI, PingFang SC, sans-serif" font-weight="700">ssq-ui</text>
+  <text x="736" y="118" fill="#0F172A" font-size="54" font-family="Segoe UI, PingFang SC, sans-serif" font-weight="700">Vue 3 组件库</text>
+  <text x="736" y="176" fill="#334155" font-size="26" font-family="Segoe UI, PingFang SC, sans-serif">基础组件、弹层能力、主题定制与工程化交付</text>
+  <text x="770" y="468" fill="#E2E8F0" font-size="28" font-family="Segoe UI, PingFang SC, sans-serif">Button / Input / Dialog / Select / Theme</text>
+  <defs>
+    <linearGradient id="paint0_linear" x1="92" y1="76" x2="1102" y2="554" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EFF6FF" />
+      <stop offset="0.55" stop-color="#FFFFFF" />
+      <stop offset="1" stop-color="#ECFEFF" />
+    </linearGradient>
+    <linearGradient id="paint1_linear" x1="172" y1="192" x2="382" y2="248" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1890FF" />
+      <stop offset="1" stop-color="#0F766E" />
+    </linearGradient>
+  </defs>
+</svg>

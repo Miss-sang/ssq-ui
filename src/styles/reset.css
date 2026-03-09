@@ -1,0 +1,56 @@
+/* 基础样式重置，对齐现代浏览器 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--my-font-family-base);
+  font-size: var(--my-font-size-base);
+  line-height: var(--my-line-height-base);
+  color: var(--my-text-color-primary);
+  background-color: var(--my-bg-color-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+a {
+  color: var(--my-color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--my-color-primary-light-3);
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* 清除浮动 */
+.clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}
