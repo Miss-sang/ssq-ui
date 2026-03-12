@@ -109,6 +109,26 @@
       "import": "./dist/es/selectStyle.mjs",
       "require": "./dist/lib/selectStyle.js"
     },
+    "./table": {
+      "types": "./dist/types/components/table/index.d.ts",
+      "import": "./dist/es/components/table/index.mjs",
+      "require": "./dist/lib/components/table/index.js"
+    },
+    "./table/style": {
+      "types": "./dist/types/components/table/style.d.ts",
+      "import": "./dist/es/tableStyle.mjs",
+      "require": "./dist/lib/tableStyle.js"
+    },
+    "./tooltip": {
+      "types": "./dist/types/components/tooltip/index.d.ts",
+      "import": "./dist/es/components/tooltip/index.mjs",
+      "require": "./dist/lib/components/tooltip/index.js"
+    },
+    "./tooltip/style": {
+      "types": "./dist/types/components/tooltip/style.d.ts",
+      "import": "./dist/es/tooltipStyle.mjs",
+      "require": "./dist/lib/tooltipStyle.js"
+    },
     "./space": {
       "types": "./dist/types/components/space/index.d.ts",
       "import": "./dist/es/components/space/index.mjs",
@@ -143,11 +163,16 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
+    "coverage:check": "node ./scripts/check-coverage.mjs",
     "perf:report": "node ./scripts/perf-report.mjs",
-    "perf:smoke": "node ./scripts/perf-smoke.mjs",
+    "perf:table": "node ./scripts/table-benchmark.mjs",
+    "perf:smoke": "node ./scripts/perf-smoke.mjs && node ./scripts/table-benchmark.mjs",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish",
     "release:check": "npm run lint && npm run typecheck && npm test -- --run && npm run build && npm run docs:build && npm run perf:smoke && npm pack --dry-run"
   },
   "dependencies": {
@@ -157,11 +182,13 @@
     "vue": "^3.5.25"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.30.0",
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.10.1",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
     "@vitejs/plugin-vue": "^6.0.2",
+    "@vitest/coverage-v8": "^4.0.18",
     "@vitest/ui": "^4.0.18",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",

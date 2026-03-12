@@ -110,6 +110,30 @@ describe('theme runtime', () => {
     expect(tokens['--my-color-primary-dark-1']).toBe('#2c58db')
   })
 
+  it('supports token overrides and exports the merged theme config', () => {
+    const controller = useTheme()
+    controller.setOverrides({
+      primary: '#2255cc',
+      radiusMd: '18px',
+      spacingLg: '28px'
+    })
+
+    const tokens = controller.exportTokens()
+    const config = controller.exportThemeConfig()
+
+    expect(tokens['--my-color-primary']).toBe('#2255cc')
+    expect(tokens['--my-border-radius-md']).toBe('18px')
+    expect(tokens['--my-spacing-lg']).toBe('28px')
+    expect(config.overrides).toMatchObject({
+      primary: '#2255cc',
+      radiusMd: '18px',
+      spacingLg: '28px'
+    })
+
+    controller.resetOverrides()
+    expect(controller.exportThemeConfig().overrides).toEqual({})
+  })
+
   it('emits update:theme and theme-change from ConfigProvider', async () => {
     const Consumer = defineComponent({
       setup() {

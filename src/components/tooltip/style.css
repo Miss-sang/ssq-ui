@@ -1,0 +1,39 @@
+.my-tooltip {
+  display: inline-flex;
+  position: relative;
+  max-width: 100%;
+}
+
+.my-tooltip__trigger {
+  display: inline-flex;
+  max-width: 100%;
+}
+
+.my-tooltip__content {
+  max-width: min(280px, calc(100vw - 24px));
+  padding: calc(var(--my-spacing-xs) + 2px) var(--my-spacing-sm);
+  border-radius: var(--my-border-radius-sm);
+  background: color-mix(in srgb, var(--my-color-black) 88%, var(--my-color-primary));
+  color: var(--my-color-white);
+  box-shadow: var(--my-shadow-lg);
+  font-size: var(--my-font-size-xs);
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+.my-tooltip__content[data-trigger='hover'] {
+  pointer-events: auto;
+}
+
+.my-tooltip-fade-enter-active,
+.my-tooltip-fade-leave-active {
+  transition:
+    opacity var(--my-transition-duration-base) var(--my-transition-timing-function-base),
+    transform var(--my-transition-duration-base) var(--my-transition-timing-function-base);
+}
+
+.my-tooltip-fade-enter-from,
+.my-tooltip-fade-leave-to {
+  opacity: 0;
+  transform: translateY(4px);
+}

@@ -58,6 +58,20 @@ function printReport(report) {
   })
 }
 
+function printTableBenchmark(benchmarkPath) {
+  if (!existsSync(benchmarkPath)) {
+    return
+  }
+
+  const benchmark = JSON.parse(readFileSync(benchmarkPath, 'utf8'))
+
+  console.log('\nTable 10k benchmark')
+  console.log(
+    `render ${benchmark.summary.renderMs} ms | avg scroll ${benchmark.summary.avgScrollMs} ms | p95 scroll ${benchmark.summary.p95ScrollMs} ms | estimated fps ${benchmark.summary.estimatedFps}`
+  )
+  console.log(`rendered rows ${benchmark.summary.renderedRows} | passed ${benchmark.passed}`)
+}
+
 const reports = [
   readAssetReport('Library dist/es', resolve(repoRoot, 'dist/es')),
   readAssetReport('Docs assets', resolve(repoRoot, 'docs/.vitepress/dist/assets'))
@@ -65,3 +79,4 @@ const reports = [
 
 console.log('Performance asset report')
 reports.forEach(printReport)
+printTableBenchmark(resolve(repoRoot, 'node_modules/.tmp/perf-smoke/table-benchmark.json'))

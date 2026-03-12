@@ -1,0 +1,193 @@
+.my-table {
+  position: relative;
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--my-border-color-base);
+  border-radius: var(--my-border-radius-lg);
+  background: var(--my-bg-color-container);
+  overflow: visible;
+  isolation: isolate;
+}
+
+.my-table__header {
+  position: relative;
+  z-index: 4;
+  background: var(--my-surface-elevated);
+  border-bottom: 1px solid var(--my-border-color-base);
+  border-radius: var(--my-border-radius-lg) var(--my-border-radius-lg) 0 0;
+  overflow: visible;
+}
+
+.my-table__header.is-sticky {
+  position: sticky;
+  top: 0;
+}
+
+.my-table__body {
+  position: relative;
+  overflow: auto;
+  outline: none;
+  border-radius: 0 0 var(--my-border-radius-lg) var(--my-border-radius-lg);
+}
+
+.my-table__spacer {
+  position: relative;
+  min-height: 100%;
+}
+
+.my-table__row {
+  position: absolute;
+  inset-inline: 0;
+  display: grid;
+  align-items: stretch;
+  border-bottom: 1px solid var(--my-border-color-light);
+  background: var(--my-bg-color-container);
+}
+
+.my-table__row--header {
+  position: relative;
+  border-bottom: 0;
+}
+
+.my-table__row.is-active {
+  background: color-mix(in srgb, var(--my-color-primary) 6%, var(--my-bg-color-container));
+}
+
+.my-table__cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: var(--my-spacing-sm) var(--my-spacing-md);
+  color: var(--my-text-color-primary);
+  background: inherit;
+  box-sizing: border-box;
+}
+
+.my-table__cell--header {
+  font-weight: var(--my-font-weight-medium);
+  background: var(--my-surface-elevated);
+  overflow: visible;
+}
+
+.my-table__header-content {
+  display: flex;
+  align-items: center;
+  gap: var(--my-spacing-sm);
+  width: 100%;
+  min-width: 0;
+}
+
+.my-table__cell.is-fixed-left,
+.my-table__cell.is-fixed-right {
+  background: inherit;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--my-border-color-light) 55%, transparent);
+}
+
+.my-table__header-button {
+  display: inline-flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--my-spacing-xs);
+  min-width: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  overflow: hidden;
+  text-align: inherit;
+}
+
+.my-table__header-button:disabled {
+  cursor: default;
+}
+
+.my-table__header-title {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-align: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.my-table__sort-indicator {
+  flex: none;
+  color: var(--my-text-color-secondary);
+  font-size: var(--my-font-size-sm);
+}
+
+.my-table__filter-trigger {
+  flex: none;
+  padding: 4px 8px;
+  border: 1px solid var(--my-border-color-base);
+  border-radius: var(--my-border-radius-sm);
+  background: var(--my-bg-color-container);
+  color: var(--my-text-color-secondary);
+  cursor: pointer;
+  font-size: var(--my-font-size-xs);
+  white-space: nowrap;
+}
+
+.my-table__filter-trigger[aria-expanded='true'] {
+  border-color: var(--my-color-primary);
+  color: var(--my-color-primary);
+}
+
+.my-table__filter-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 12;
+  display: grid;
+  gap: var(--my-spacing-sm);
+  min-width: min(220px, calc(100% - 16px));
+  max-width: calc(100% - 16px);
+  padding: var(--my-spacing-sm);
+  border: 1px solid var(--my-border-color-base);
+  border-radius: var(--my-border-radius-md);
+  background: var(--my-surface-elevated);
+  box-shadow: var(--my-shadow-xl);
+  box-sizing: border-box;
+}
+
+.my-table__filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--my-spacing-xs);
+}
+
+.my-table__filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--my-spacing-xs);
+}
+
+.my-table__filter-option {
+  padding: 6px 10px;
+  border: 1px solid var(--my-border-color-base);
+  border-radius: var(--my-border-radius-sm);
+  background: var(--my-bg-color-container);
+  color: var(--my-text-color-secondary);
+  cursor: pointer;
+}
+
+.my-table__filter-option.is-active {
+  border-color: var(--my-color-primary);
+  background: var(--my-color-primary-light-5);
+  color: var(--my-color-primary-dark-1);
+}
+
+.my-table__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  padding: var(--my-spacing-lg);
+  color: var(--my-text-color-secondary);
+}

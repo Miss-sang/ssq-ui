@@ -13,9 +13,9 @@
 - 基础组件：`Button`、`Icon`、`Input`、`Space`
 - 反馈组件：`Dialog`
 - 数据录入：`Select`
+- 数据展示：`Table`
 - 主题系统：`ConfigProvider`、`useTheme`
 - 公共基础设施：overlay registry、focus trap、scroll lock、Teleport 目标解析
-
 
 ## 技术栈
 
@@ -28,5 +28,12 @@
 ## 项目亮点
 
 - `Dialog` 和 `Select` 复用同一套弹层基础设施，避免重复实现滚动锁定、焦点管理和键盘关闭逻辑。
+- `Table` 同时覆盖排序、筛选、固定列和虚拟滚动这几类常见数据展示需求，适合直接承载后台列表页。
 - 支持全量安装与子路径导入，子路径默认自动注入组件样式，便于按需加载。
 - 主题系统基于全局 `--my-*` token 工作，运行时切换后能够自动覆盖 Teleport 到 `body` 的组件。
+
+## 推荐阅读
+
+- 如果你准备先浏览整体能力，建议先看 [快速开始](/guide/getting-started)。
+- 如果你要搭建列表页或数据展示页，可以直接跳转到 [Table 表格](/components/table)。
+- 如果你想先确认主题定制能力，可继续查看 [主题编辑器](/guide/theme-lab)。

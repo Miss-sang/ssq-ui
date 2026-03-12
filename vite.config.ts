@@ -38,9 +38,19 @@ const styleBridgeEntries: StyleBridgeEntry[] = [
     styleImports: [sharedStyleImport, './components/select/style.css']
   },
   {
+    wrapperBase: 'tableStyle',
+    indexBase: 'components/table/index',
+    styleImports: [sharedStyleImport, './components/table/style.css']
+  },
+  {
     wrapperBase: 'spaceStyle',
     indexBase: 'components/space/index',
     styleImports: [sharedStyleImport, './components/space/style.css']
+  },
+  {
+    wrapperBase: 'tooltipStyle',
+    indexBase: 'components/tooltip/index',
+    styleImports: [sharedStyleImport, './components/tooltip/style.css']
   }
 ]
 
@@ -51,7 +61,9 @@ const fullStyleImports = [
   './components/icon/style.css',
   './components/input/style.css',
   './components/select/style.css',
-  './components/space/style.css'
+  './components/space/style.css',
+  './components/table/style.css',
+  './components/tooltip/style.css'
 ]
 
 function stripEmptyCssComments(code: string): string {
@@ -151,7 +163,9 @@ export default defineConfig({
         iconStyle: resolve(__dirname, 'src/components/icon/style.ts'),
         inputStyle: resolve(__dirname, 'src/components/input/style.ts'),
         selectStyle: resolve(__dirname, 'src/components/select/style.ts'),
-        spaceStyle: resolve(__dirname, 'src/components/space/style.ts')
+        tableStyle: resolve(__dirname, 'src/components/table/style.ts'),
+        spaceStyle: resolve(__dirname, 'src/components/space/style.ts'),
+        tooltipStyle: resolve(__dirname, 'src/components/tooltip/style.ts')
       },
       name: 'MyUI',
       fileName: (format) => `my-ui.${format}.js`

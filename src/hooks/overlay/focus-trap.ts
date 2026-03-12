@@ -30,10 +30,38 @@ function isFocusableElement(element: HTMLElement): boolean {
   return true
 }
 
+export function focusElementWithoutScroll(element: HTMLElement | undefined | null): void {
+  if (!element) {
+    return
+  }
+
+  try {
+    element.focus({ preventScroll: true })
+  } catch {
+    element.focus()
+  }
+}
+
 export function getFocusableElements(container: HTMLElement): HTMLElement[] {
   return Array.from(container.querySelectorAll<HTMLElement>(focusableSelector)).filter(
     isFocusableElement
   )
+}
+
+export async function focusFirstDescendant(
+  containerRef: Ref<HTMLElement | undefined>,
+  fallback?: HTMLElement | undefined | null
+) {
+  await nextTick()
+
+  const container = containerRef.value
+  if (!container) {
+    focusElementWithoutScroll(fallback)
+    return
+  }
+
+  const [firstFocusableElement] = getFocusableElements(container)
+  focusElementWithoutScroll(firstFocusableElement ?? fallback ?? container)
 }
 
 export function useFocusTrap(containerRef: Ref<HTMLElement | undefined>, active: Ref<boolean>) {
@@ -41,20 +69,12 @@ export function useFocusTrap(containerRef: Ref<HTMLElement | undefined>, active:
   let hasActivated = false
 
   async function focusInitialElement() {
-    await nextTick()
-
-    const container = containerRef.value
-    if (!container) {
-      return
-    }
-
-    const [firstFocusableElement] = getFocusableElements(container)
-    ;(firstFocusableElement ?? container).focus({ preventScroll: true })
+    await focusFirstDescendant(containerRef)
   }
 
   function restoreFocus() {
     if (lastFocusedElement?.isConnected) {
-      lastFocusedElement.focus({ preventScroll: true })
+      focusElementWithoutScroll(lastFocusedElement)
     }
 
     lastFocusedElement = null
@@ -74,7 +94,7 @@ export function useFocusTrap(containerRef: Ref<HTMLElement | undefined>, active:
 
     if (focusableElements.length === 0) {
       event.preventDefault()
-      container.focus({ preventScroll: true })
+      focusElementWithoutScroll(container)
       return
     }
 
@@ -84,13 +104,13 @@ export function useFocusTrap(containerRef: Ref<HTMLElement | undefined>, active:
 
     if (event.shiftKey && currentTarget === firstFocusableElement) {
       event.preventDefault()
-      lastFocusableElement?.focus({ preventScroll: true })
+      focusElementWithoutScroll(lastFocusableElement)
       return
     }
 
     if (!event.shiftKey && currentTarget === lastFocusableElement) {
       event.preventDefault()
-      firstFocusableElement?.focus({ preventScroll: true })
+      focusElementWithoutScroll(firstFocusableElement)
     }
   }
 

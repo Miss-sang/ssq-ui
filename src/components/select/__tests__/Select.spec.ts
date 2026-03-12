@@ -125,6 +125,92 @@ describe('MySelect', () => {
     expect(wrapper.emitted('visible-change')?.[1]).toEqual([false])
   })
 
+  it('does not react to clicks or keyboard input when disabled', async () => {
+    const wrapper = mountSelect({
+      attachTo: document.body,
+      props: {
+        options: baseOptions,
+        disabled: true,
+        modelValue: 'alpha',
+        clearable: true
+      }
+    })
+
+    const selector = wrapper.get('.my-select__selector')
+    await selector.trigger('click')
+    await selector.trigger('keydown', { key: 'ArrowDown' })
+    await selector.trigger('keydown', { key: ' ' })
+    await nextTick()
+
+    expect(findDropdown()).toBeNull()
+    expect(wrapper.find('.my-select__action').exists()).toBe(false)
+    expect(selector.attributes('aria-disabled')).toBe('true')
+  })
+
+  it('links combobox and listbox aria attributes', async () => {
+    const wrapper = mountSelect({
+      attachTo: document.body,
+      props: {
+        options: baseOptions
+      }
+    })
+
+    await wrapper.get('.my-select__selector').trigger('click')
+    await nextTick()
+
+    const selector = wrapper.get('.my-select__selector')
+    const listbox = document.body.querySelector('.my-select__list') as HTMLElement | null
+
+    expect(selector.attributes('role')).toBe('combobox')
+    expect(selector.attributes('aria-controls')).toBe(listbox?.getAttribute('id'))
+    expect(listbox?.getAttribute('aria-labelledby')).toBe(selector.attributes('id'))
+  })
+
+  it('toggles the panel with Space and points aria-activedescendant at the selected option', async () => {
+    const wrapper = mountSelect({
+      attachTo: document.body,
+      props: {
+        options: baseOptions,
+        modelValue: 'bravo'
+      }
+    })
+
+    const selector = wrapper.get('.my-select__selector')
+
+    await selector.trigger('keydown', { key: ' ' })
+    await nextTick()
+
+    expect(findDropdown()).not.toBeNull()
+    expect(selector.attributes('aria-activedescendant')).toContain('-option-1')
+
+    await selector.trigger('keydown', { key: ' ' })
+    await nextTick()
+
+    expect(findDropdown()).toBeNull()
+  })
+
+  it('restores focus to the combobox trigger after closing with Escape', async () => {
+    const wrapper = mountSelect({
+      attachTo: document.body,
+      props: {
+        options: baseOptions,
+        filterable: true
+      }
+    })
+
+    await wrapper.get('.my-select__selector').trigger('click')
+    await nextTick()
+
+    const input = wrapper.get('.my-select__input').element as HTMLInputElement
+    const selector = wrapper.get('.my-select__selector').element
+    input.focus()
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await nextTick()
+
+    expect(document.activeElement).toBe(selector)
+  })
+
   it('filters options and emits search when filterable', async () => {
     const wrapper = mountSelect({
       attachTo: document.body,
@@ -143,6 +229,44 @@ describe('MySelect', () => {
     expect(wrapper.emitted('search')?.[0]).toEqual(['br'])
     expect(findOptions()).toHaveLength(1)
     expect(findOptions()[0]?.textContent).toContain('Bravo')
+  })
+
+  it('opens from input events and falls back to input.select when setSelectionRange throws', async () => {
+    const wrapper = mountSelect({
+      attachTo: document.body,
+      props: {
+        options: baseOptions,
+        filterable: true,
+        modelValue: 'alpha'
+      }
+    })
+
+    const input = wrapper.get('.my-select__input').element as HTMLInputElement
+    const selectionSpy = vi.fn(() => {
+      throw new Error('unsupported')
+    })
+    const selectSpy = vi.spyOn(input, 'select').mockImplementation(() => {})
+
+    Object.defineProperty(input, 'setSelectionRange', {
+      configurable: true,
+      value: selectionSpy
+    })
+
+    input.value = 'br'
+    input.dispatchEvent(new Event('input'))
+    await nextTick()
+
+    expect(findDropdown()).not.toBeNull()
+    expect(wrapper.emitted('search')?.[0]).toEqual(['br'])
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await nextTick()
+
+    await wrapper.get('.my-select__selector').trigger('click')
+    await nextTick()
+
+    expect(selectionSpy).toHaveBeenCalledWith(0, input.value.length)
+    expect(selectSpy).toHaveBeenCalled()
   })
 
   it('focuses the filterable input without scrolling when opening', async () => {
@@ -179,6 +303,24 @@ describe('MySelect', () => {
     expect(wrapper.emitted('clear')).toHaveLength(1)
   })
 
+  it('does not emit change when the selected option is chosen again', async () => {
+    const wrapper = mountSelect({
+      attachTo: document.body,
+      props: {
+        modelValue: 'alpha',
+        options: baseOptions
+      }
+    })
+
+    await wrapper.get('.my-select__selector').trigger('click')
+    await nextTick()
+    ;(findOptions()[0] as HTMLElement | undefined)?.click()
+    await nextTick()
+
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['alpha'])
+    expect(wrapper.emitted('change')).toBeUndefined()
+  })
+
   it('refocuses the filterable input without scrolling after clear', async () => {
     const wrapper = mountSelect({
       attachTo: document.body,
@@ -209,9 +351,7 @@ describe('MySelect', () => {
     await wrapper.get('.my-select__selector').trigger('click')
     await nextTick()
 
-    expect((wrapper.element as HTMLElement).style.zIndex).toBe(
-      'calc(var(--my-z-index-popup) + 0)'
-    )
+    expect((wrapper.element as HTMLElement).style.zIndex).toBe('calc(var(--my-z-index-popup) + 0)')
 
     await wrapper.get('.my-select__selector').trigger('click')
     await nextTick()
@@ -278,6 +418,28 @@ describe('MySelect', () => {
         value: originalScrollIntoView
       })
     }
+  })
+
+  it('ignores disabled options on hover and click', async () => {
+    const wrapper = mountSelect({
+      attachTo: document.body,
+      props: {
+        options: baseOptions
+      }
+    })
+
+    await wrapper.get('.my-select__selector').trigger('click')
+    await nextTick()
+
+    const selector = wrapper.get('.my-select__selector')
+    const disabledOption = findOptions()[2] as HTMLElement | undefined
+
+    disabledOption?.dispatchEvent(new MouseEvent('mouseenter'))
+    disabledOption?.click()
+    await nextTick()
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(selector.attributes('aria-activedescendant')).toContain('-option-0')
   })
 
   it('renders an empty state when no options match', async () => {
@@ -392,6 +554,44 @@ describe('MySelect', () => {
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['option-31'])
   })
 
+  it('opens on ArrowUp and can scroll virtualized lists back upward', async () => {
+    const options = Array.from({ length: 160 }, (_, index) => ({
+      label: `Option ${index + 1}`,
+      value: `option-${index + 1}`
+    }))
+
+    const wrapper = mountSelect({
+      attachTo: document.body,
+      props: {
+        options,
+        modelValue: 'option-11',
+        virtualThreshold: 20,
+        maxPanelHeight: 180
+      }
+    })
+
+    const selector = wrapper.get('.my-select__selector')
+    await selector.trigger('keydown', { key: 'ArrowUp' })
+    await nextTick()
+
+    const list = document.body.querySelector('.my-select__list') as HTMLDivElement | null
+
+    expect(list).not.toBeNull()
+
+    Object.defineProperty(list, 'clientHeight', {
+      configurable: true,
+      value: 180
+    })
+
+    if (list) {
+      list.scrollTop = 800
+    }
+
+    await selector.trigger('keydown', { key: 'ArrowUp' })
+
+    expect(list?.scrollTop).toBe(324)
+  })
+
   it('does not enable virtualization below the threshold', async () => {
     mountSelect({
       attachTo: document.body,
@@ -407,6 +607,24 @@ describe('MySelect', () => {
 
     expect(document.body.querySelector('.my-select__virtual')).toBeNull()
     expect(findOptions()).toHaveLength(baseOptions.length)
+  })
+
+  it('refreshes filterable input text from props when closed', async () => {
+    const wrapper = mountSelect({
+      attachTo: document.body,
+      props: {
+        options: baseOptions,
+        filterable: true,
+        modelValue: 'alpha'
+      }
+    })
+
+    await wrapper.setProps({
+      modelValue: 'bravo'
+    })
+    await nextTick()
+
+    expect((wrapper.get('.my-select__input').element as HTMLInputElement).value).toBe('Bravo')
   })
 
   it('exposes focus, blur, open, and close methods', async () => {
@@ -449,6 +667,6 @@ describe('MySelect', () => {
     selector?.click()
     await nextTick()
 
-    expect(document.body.textContent).toContain('Loading...')
+    expect(document.body.textContent).toContain('加载中...')
   })
 })

@@ -5,5 +5,6 @@ export type {
   ThemeMode,
   ThemeMotion,
   ThemePreset,
-  ThemeRadius
+  ThemeRadius,
+  ThemeTokenOverrides
 } from '../utils/theme'

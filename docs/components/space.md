@@ -7,12 +7,13 @@
 ## 基础水平布局
 
 :::demo
+
 ```vue
 <template>
   <MySpace>
-    <div class="space-demo-chip">Alpha</div>
-    <div class="space-demo-chip">Beta</div>
-    <div class="space-demo-chip">Gamma</div>
+    <div class="space-demo-chip">模块 A</div>
+    <div class="space-demo-chip">模块 B</div>
+    <div class="space-demo-chip">模块 C</div>
   </MySpace>
 </template>
 
@@ -32,11 +33,13 @@
 }
 </style>
 ```
+
 :::
 
 ## 垂直布局
 
 :::demo
+
 ```vue
 <template>
   <MySpace direction="vertical">
@@ -57,11 +60,13 @@
 }
 </style>
 ```
+
 :::
 
 ## 五档间距
 
 :::demo
+
 ```vue
 <template>
   <div class="space-demo-stack">
@@ -99,11 +104,13 @@ const sizes = ['xs', 'sm', 'md', 'lg', 'xl']
 }
 </style>
 ```
+
 :::
 
 ## 自定义间距
 
 :::demo
+
 ```vue
 <template>
   <div class="space-demo-stack">
@@ -141,36 +148,38 @@ const sizes = ['xs', 'sm', 'md', 'lg', 'xl']
 }
 </style>
 ```
+
 :::
 
 ## 对齐方式
 
 :::demo
+
 ```vue
 <template>
   <div class="space-demo-stack">
     <MySpace align="start" class="space-demo-align-row">
-      <span class="space-demo-tag">start</span>
+      <span class="space-demo-tag">起始</span>
       <div class="space-demo-box space-demo-box--lg" />
       <div class="space-demo-box" />
     </MySpace>
 
     <MySpace align="center" class="space-demo-align-row">
-      <span class="space-demo-tag">center</span>
+      <span class="space-demo-tag">居中</span>
       <div class="space-demo-box space-demo-box--lg" />
       <div class="space-demo-box" />
     </MySpace>
 
     <MySpace align="end" class="space-demo-align-row">
-      <span class="space-demo-tag">end</span>
+      <span class="space-demo-tag">底部</span>
       <div class="space-demo-box space-demo-box--lg" />
       <div class="space-demo-box" />
     </MySpace>
 
     <MySpace align="baseline" class="space-demo-align-row">
-      <span class="space-demo-text-lg">Baseline</span>
-      <span class="space-demo-text-sm">caption</span>
-      <span class="space-demo-text-xs">meta</span>
+      <span class="space-demo-text-lg">基线</span>
+      <span class="space-demo-text-sm">说明</span>
+      <span class="space-demo-text-xs">补充</span>
     </MySpace>
   </div>
 </template>
@@ -221,11 +230,13 @@ const sizes = ['xs', 'sm', 'md', 'lg', 'xl']
 }
 </style>
 ```
+
 :::
 
 ## 换行布局
 
 :::demo
+
 ```vue
 <template>
   <MySpace wrap size="md" class="space-demo-wrap">
@@ -236,16 +247,7 @@ const sizes = ['xs', 'sm', 'md', 'lg', 'xl']
 </template>
 
 <script setup>
-const modules = [
-  'Button',
-  'Icon',
-  'Input',
-  'Space',
-  'Theme',
-  'Docs',
-  'Vitest',
-  'VitePress'
-]
+const modules = ['Button', 'Icon', 'Input', 'Space', 'Theme', 'Docs', 'Vitest', 'VitePress']
 </script>
 
 <style scoped>
@@ -262,11 +264,13 @@ const modules = [
 }
 </style>
 ```
+
 :::
 
 ## 结合 Button 布局
 
 :::demo
+
 ```vue
 <template>
   <MySpace size="md" wrap>
@@ -277,11 +281,13 @@ const modules = [
   </MySpace>
 </template>
 ```
+
 :::
 
 ## 结合 Input + Button 布局
 
 :::demo
+
 ```vue
 <template>
   <div class="space-search-shell">
@@ -320,28 +326,29 @@ const submitted = ref('')
 }
 </style>
 ```
+
 :::
 
-## API
+## 接口说明
 
-### Props
+### 属性
 
-| 名称 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `direction` | `'horizontal' \| 'vertical'` | `'horizontal'` | 主轴方向，控制子项的水平或垂直排列方式。 |
-| `align` | `'start' \| 'center' \| 'end' \| 'baseline'` | `horizontal => 'center'` / `vertical => 'start'` | 交叉轴对齐方式。 |
-| `wrap` | `boolean` | `false` | 是否允许子项自动换行。 |
-| `size` | `SpaceGapValue \| [SpaceGapValue, SpaceGapValue]` | `'sm'` | 间距大小，支持主题 token、数值、CSS 长度字符串，以及 `[horizontal, vertical]` 元组。 |
+| 名称        | 类型                                              | 默认值                                           | 说明                                                                                 |
+| ----------- | ------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `direction` | `'horizontal' \| 'vertical'`                      | `'horizontal'`                                   | 主轴方向，控制子项的水平或垂直排列方式。                                             |
+| `align`     | `'start' \| 'center' \| 'end' \| 'baseline'`      | `horizontal => 'center'` / `vertical => 'start'` | 交叉轴对齐方式。                                                                     |
+| `wrap`      | `boolean`                                         | `false`                                          | 是否允许子项自动换行。                                                               |
+| `size`      | `SpaceGapValue \| [SpaceGapValue, SpaceGapValue]` | `'sm'`                                           | 间距大小，支持主题 token、数值、CSS 长度字符串，以及 `[horizontal, vertical]` 元组。 |
 
-### Types
+### 类型
 
 ```ts
 type SpaceSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 type SpaceGapValue = SpaceSize | number | string
 ```
 
-### Slots
+### 插槽
 
-| 名称 | 类型 | 说明 |
-| --- | --- | --- |
+| 名称      | 类型            | 说明                           |
+| --------- | --------------- | ------------------------------ |
 | `default` | `() => VNode[]` | 需要参与间距布局的子节点内容。 |

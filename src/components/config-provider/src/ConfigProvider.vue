@@ -30,7 +30,8 @@ const stopSubscribe = subscribeThemeChanges((resolvedTheme) => {
     preset: resolvedTheme.preset,
     primary: resolvedTheme.primary,
     radius: resolvedTheme.radius,
-    motion: resolvedTheme.motion
+    motion: resolvedTheme.motion,
+    overrides: resolvedTheme.overrides
   })
   emit('theme-change', resolvedTheme)
 })

@@ -1,17 +1,25 @@
-import { defineConfig } from 'vitest/config'
-import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
+import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [vue()],
   test: {
-    // 测试环境
     environment: 'jsdom',
-    // 测试文件匹配规则
     include: ['src/**/*.{test,spec}.{js,ts}'],
-    // 别名
     alias: {
       '@': resolve(__dirname, 'src')
+    },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text-summary', 'json-summary', 'html', 'lcov'],
+      reportsDirectory: './coverage',
+      thresholds: {
+        lines: 85,
+        functions: 85,
+        branches: 80,
+        statements: 85
+      }
     }
   }
 })

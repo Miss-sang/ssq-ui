@@ -1,21 +1,19 @@
 import { defineConfig } from 'vitepress'
 import { demoblockPlugin, demoblockVitePlugin } from 'vitepress-theme-demoblock'
 
+const docsBase = process.env.DOCS_BASE ?? '/ssq-ui/'
+
 export default defineConfig({
   lang: 'zh-CN',
   title: 'ssq-ui',
-  description: '基于 Vue 3 与 TypeScript 的组件库文档站点。',
-  head: [
-    ['link', { rel: 'icon', href: '/ssq-ui/favicon.svg', type: 'image/svg+xml' }],
-    ['meta', { name: 'theme-color', content: '#1890ff' }],
-    ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:title', content: 'ssq-ui' }],
-    ['meta', { property: 'og:description', content: '基础组件、弹层能力、主题定制。' }],
-    ['meta', { property: 'og:image', content: 'https://miss-sang.github.io/ssq-ui/social-preview.svg' }]
-  ],
+  description: '一个支持浮层、数据展示与运行时主题编辑的 Vue 3 中文组件库。',
+  base: docsBase,
   appearance: true,
   lastUpdated: true,
-  base: '/ssq-ui/',
+  head: [
+    ['link', { rel: 'icon', href: `${docsBase}favicon.svg`, type: 'image/svg+xml' }],
+    ['meta', { name: 'theme-color', content: '#1890ff' }]
+  ],
   markdown: {
     lineNumbers: true,
     config: md => {
@@ -28,6 +26,9 @@ export default defineConfig({
     plugins: [demoblockVitePlugin()]
   },
   themeConfig: {
+    outline: {
+      label: '本页导航'
+    },
     nav: [
       { text: '指南', link: '/guide/introduction' },
       { text: '组件', link: '/components/button' },
@@ -40,13 +41,13 @@ export default defineConfig({
           items: [
             { text: '介绍', link: '/guide/introduction' },
             { text: '快速开始', link: '/guide/getting-started' },
-            { text: '主题定制', link: '/guide/theme-lab' }
+            { text: '主题编辑器', link: '/guide/theme-lab' }
           ]
         }
       ],
       '/components/': [
         {
-          text: '基础组件',
+          text: '基础',
           items: [
             { text: 'Button 按钮', link: '/components/button' },
             { text: 'Icon 图标', link: '/components/icon' },
@@ -54,26 +55,67 @@ export default defineConfig({
           ]
         },
         {
-          text: '反馈组件',
-          items: [{ text: 'Dialog 对话框', link: '/components/dialog' }]
-        },
-        {
           text: '数据录入',
           items: [
             { text: 'Input 输入框', link: '/components/input' },
             { text: 'Select 选择器', link: '/components/select' }
           ]
+        },
+        {
+          text: '浮层反馈',
+          items: [
+            { text: 'Dialog 对话框', link: '/components/dialog' },
+            { text: 'Tooltip 文字提示', link: '/components/tooltip' }
+          ]
+        },
+        {
+          text: '数据展示',
+          items: [{ text: 'Table 表格', link: '/components/table' }]
         }
       ]
     },
     socialLinks: [{ icon: 'github', link: 'https://github.com/Miss-sang/ssq-ui' }],
+    docFooter: {
+      prev: '上一页',
+      next: '下一页'
+    },
     footer: {
-      message: '基于 MIT License 发布。',
-      copyright: 'Copyright © 2025 ssq-ui'
+      message: '基于 MIT 协议开源发布。',
+      copyright: 'Copyright © 2026 ssq-ui'
     },
+    darkModeSwitchLabel: '主题切换',
+    lightModeSwitchTitle: '切换到浅色模式',
+    darkModeSwitchTitle: '切换到深色模式',
+    sidebarMenuLabel: '菜单',
+    returnToTopLabel: '返回顶部',
+    langMenuLabel: '切换语言',
+    skipToContentLabel: '跳转到正文',
     search: {
-      provider: 'local'
+      provider: 'local',
+      options: {
+        translations: {
+          button: {
+            buttonText: '搜索',
+            buttonAriaLabel: '搜索文档'
+          },
+          modal: {
+            displayDetails: '显示详细列表',
+            resetButtonTitle: '清空搜索条件',
+            backButtonTitle: '返回',
+            noResultsText: '没有找到相关结果',
+            footer: {
+              selectText: '选择',
+              selectKeyAriaLabel: '回车键',
+              navigateText: '切换',
+              navigateUpKeyAriaLabel: '向上方向键',
+              navigateDownKeyAriaLabel: '向下方向键',
+              closeText: '关闭',
+              closeKeyAriaLabel: 'Esc 键'
+            }
+          }
+        }
+      }
     },
-    lastUpdatedText: '最近更新'
+    lastUpdatedText: '上次更新'
   }
 })

@@ -5,6 +5,7 @@
 ## 基础用法
 
 :::demo
+
 ```vue
 <template>
   <div class="select-demo-stack">
@@ -44,6 +45,7 @@ const options = [
 }
 </style>
 ```
+
 :::
 
 ## 常见场景
@@ -51,6 +53,7 @@ const options = [
 ### 可搜索与清空
 
 :::demo
+
 ```vue
 <template>
   <div class="select-demo-stack">
@@ -98,6 +101,7 @@ const options = [
 }
 </style>
 ```
+
 :::
 
 ### 大数据量场景
@@ -105,6 +109,7 @@ const options = [
 当选项数量超过 `virtualThreshold` 时，组件会自动切换到轻量虚拟窗口，只渲染可视区域附近的 option。
 
 :::demo
+
 ```vue
 <template>
   <div class="select-demo-stack">
@@ -148,21 +153,18 @@ const options = Array.from({ length: 120 }, (_, index) => ({
 }
 </style>
 ```
+
 :::
 
 ### 禁用选项与空状态
 
 :::demo
+
 ```vue
 <template>
   <div class="select-demo-stack">
     <div class="select-demo-box">
-      <MySelect
-        v-model="value"
-        :options="options"
-        clearable
-        placeholder="请选择框架"
-      />
+      <MySelect v-model="value" :options="options" clearable placeholder="请选择框架" />
     </div>
     <div class="select-demo-box">
       <MySelect
@@ -198,53 +200,54 @@ const options = [
 }
 </style>
 ```
+
 :::
 
-## API
+## 接口说明
 
-### Props
+### 属性
 
-| 名称 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `modelValue` | `SelectValue` | `null` | 当前选中值。 |
-| `options` | `Record<string, unknown>[]` | `[]` | 选项数据源。 |
-| `fieldNames` | `SelectFieldNames` | `{}` | 自定义 `label/value/disabled` 字段映射。 |
-| `placeholder` | `string` | `'Please select'` | 占位内容。 |
-| `clearable` | `boolean` | `false` | 是否允许清空。 |
-| `filterable` | `boolean` | `false` | 是否允许输入关键字过滤。 |
-| `disabled` | `boolean` | `false` | 是否禁用。 |
-| `loading` | `boolean` | `false` | 是否显示加载态。 |
-| `emptyText` | `string` | `'No options available'` | 无数据文案。 |
-| `teleport` | `string \| HTMLElement \| false` | `'body'` | 下拉层 Teleport 目标。 |
-| `placement` | `'bottom-start' \| 'bottom-end' \| 'top-start' \| 'top-end'` | `'bottom-start'` | 下拉层定位方向。 |
-| `maxPanelHeight` | `number` | `256` | 下拉面板最大高度。 |
-| `virtualThreshold` | `number` | `80` | 超过该阈值后启用虚拟滚动。 |
+| 名称               | 类型                                                         | 默认值           | 说明                                     |
+| ------------------ | ------------------------------------------------------------ | ---------------- | ---------------------------------------- |
+| `modelValue`       | `SelectValue`                                                | `null`           | 当前选中值。                             |
+| `options`          | `Record<string, unknown>[]`                                  | `[]`             | 选项数据源。                             |
+| `fieldNames`       | `SelectFieldNames`                                           | `{}`             | 自定义 `label/value/disabled` 字段映射。 |
+| `placeholder`      | `string`                                                     | `'请选择'`       | 占位内容。                               |
+| `clearable`        | `boolean`                                                    | `false`          | 是否允许清空。                           |
+| `filterable`       | `boolean`                                                    | `false`          | 是否允许输入关键字过滤。                 |
+| `disabled`         | `boolean`                                                    | `false`          | 是否禁用。                               |
+| `loading`          | `boolean`                                                    | `false`          | 是否显示加载态。                         |
+| `emptyText`        | `string`                                                     | `'暂无可选项'`   | 无数据文案。                             |
+| `teleport`         | `string \| HTMLElement \| false`                             | `'body'`         | 下拉层 Teleport 目标。                   |
+| `placement`        | `'bottom-start' \| 'bottom-end' \| 'top-start' \| 'top-end'` | `'bottom-start'` | 下拉层定位方向。                         |
+| `maxPanelHeight`   | `number`                                                     | `256`            | 下拉面板最大高度。                       |
+| `virtualThreshold` | `number`                                                     | `80`             | 超过该阈值后启用虚拟滚动。               |
 
-### Events
+### 事件
 
-| 名称 | 类型 | 说明 |
-| --- | --- | --- |
-| `update:modelValue` | `(value: SelectValue) => void` | 选中值变化时触发。 |
-| `change` | `(value: SelectValue) => void` | 用户选择新值或清空时触发。 |
-| `visible-change` | `(visible: boolean) => void` | 下拉层显隐变化时触发。 |
-| `clear` | `(event: MouseEvent) => void` | 点击清空按钮时触发。 |
-| `search` | `(keyword: string) => void` | 可搜索模式下输入变化时触发。 |
+| 名称                | 类型                           | 说明                         |
+| ------------------- | ------------------------------ | ---------------------------- |
+| `update:modelValue` | `(value: SelectValue) => void` | 选中值变化时触发。           |
+| `change`            | `(value: SelectValue) => void` | 用户选择新值或清空时触发。   |
+| `visible-change`    | `(visible: boolean) => void`   | 下拉层显隐变化时触发。       |
+| `clear`             | `(event: MouseEvent) => void`  | 点击清空按钮时触发。         |
+| `search`            | `(keyword: string) => void`    | 可搜索模式下输入变化时触发。 |
 
-### Slots
+### 插槽
 
-| 名称 | 类型 | 说明 |
-| --- | --- | --- |
+| 名称     | 类型                                               | 说明                 |
+| -------- | -------------------------------------------------- | -------------------- |
 | `option` | `({ option, active, selected, index }) => VNode[]` | 自定义 option 内容。 |
-| `empty` | `() => VNode[]` | 自定义空状态。 |
+| `empty`  | `() => VNode[]`                                    | 自定义空状态。       |
 
-### Exposes
+### 暴露方法
 
-| 名称 | 类型 | 说明 |
-| --- | --- | --- |
-| `focus` | `() => void` | 聚焦选择器。 |
-| `blur` | `() => void` | 让选择器失焦。 |
-| `open` | `() => Promise<void>` | 打开下拉层。 |
-| `close` | `() => void` | 关闭下拉层。 |
+| 名称    | 类型                  | 说明           |
+| ------- | --------------------- | -------------- |
+| `focus` | `() => void`          | 聚焦选择器。   |
+| `blur`  | `() => void`          | 让选择器失焦。 |
+| `open`  | `() => Promise<void>` | 打开下拉层。   |
+| `close` | `() => void`          | 关闭下拉层。   |
 
 ## 设计说明
 

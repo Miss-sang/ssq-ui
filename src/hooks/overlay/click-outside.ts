@@ -1,6 +1,6 @@
 import { onBeforeUnmount, onMounted, type Ref } from 'vue'
 
-type ElementRef = Ref<HTMLElement | undefined>
+type ElementRef = Ref<HTMLElement | undefined> | Ref<(HTMLElement & Record<string, unknown>) | undefined>
 
 export function useClickOutside(
   elements: ElementRef[],

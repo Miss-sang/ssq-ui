@@ -1,4 +1,4 @@
-import { nextTick } from 'vue'
+import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { resetThemeManager, useTheme } from '../../../utils/theme'
@@ -56,6 +56,20 @@ describe('MyButton', () => {
       })
 
       expect(wrapper.classes()).not.toContain('is-icon-only')
+    })
+
+    it('collects nested slot text for ellipsis titles', () => {
+      const wrapper = mount(Button, {
+        props: { ellipsis: true },
+        slots: {
+          default: () => [
+            h('span', ['Alpha ', h('strong', 'Beta')]),
+            ' Gamma'
+          ]
+        }
+      })
+
+      expect(wrapper.attributes('title')).toBe('Alpha Beta Gamma')
     })
   })
 
@@ -301,6 +315,23 @@ describe('MyButton', () => {
 
       expect(wrapper.classes()).not.toContain('is-loading')
       expect(warning).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not enter loading state when the action returns a non-promise object', async () => {
+      const wrapper = mount(Button, {
+        props: {
+          action: () => {
+            return {
+              then: null
+            } as never
+          }
+        }
+      })
+
+      await wrapper.trigger('click')
+
+      expect(wrapper.emitted('click')).toHaveLength(1)
+      expect(wrapper.classes()).not.toContain('is-loading')
     })
   })
 

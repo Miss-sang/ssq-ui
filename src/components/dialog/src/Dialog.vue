@@ -20,11 +20,12 @@
           role="dialog"
           aria-modal="true"
           :aria-labelledby="labelledBy"
+          :aria-describedby="describedBy"
           tabindex="-1"
           @click.stop
           @keydown="handleKeydown"
         >
-          <header v-if="hasHeader" :id="labelledBy" class="my-dialog__header">
+          <header v-if="hasHeader" :id="labelId" class="my-dialog__header">
             <div class="my-dialog__title">
               <slot name="header">
                 {{ props.title }}
@@ -46,7 +47,7 @@
             </button>
           </header>
 
-          <section class="my-dialog__body">
+          <section :id="descriptionId" class="my-dialog__body">
             <slot />
           </section>
 
@@ -63,10 +64,10 @@
 import { computed, ref, toRef, useSlots, watch } from 'vue'
 import Icon from '../../icon'
 import {
-  createOverlayId,
   useBodyScrollLock,
   useEscapeKeydown,
   useFocusTrap,
+  useOverlayA11y,
   useOverlayStack,
   useTeleportTarget
 } from '../../../hooks/overlay'
@@ -84,18 +85,25 @@ const emit = defineEmits<DialogEmits>()
 defineSlots<DialogSlots>()
 
 const slots = useSlots() as DialogSlots
-const overlayId = ref(createOverlayId('dialog'))
 const dialogRef = ref<HTMLDivElement>()
 const isClosing = ref(false)
 const rendered = ref(props.open)
 
 const hasHeader = computed(() => Boolean(props.title || slots.header?.().length || props.showClose))
 const hasFooter = computed(() => Boolean(slots.footer?.().length))
-const labelledBy = computed(() => (props.title || slots.header?.().length ? `${overlayId.value}-title` : undefined))
 const shouldRender = computed(() => props.destroyOnClose ? rendered.value : true)
 const isActive = computed(() => props.open)
 const shouldLockBodyScroll = computed(() => props.open && props.lockScroll)
 const shouldListenForEscape = computed(() => props.open && props.closeOnPressEscape)
+const { overlayId, labelId, descriptionId, labelledBy, describedBy } = useOverlayA11y(
+  'dialog',
+  isActive,
+  {
+    labelled: hasHeader,
+    described: computed(() => true),
+    restoreOnClose: false
+  }
+)
 const { stackIndex, isTopmost } = useOverlayStack(overlayId, isActive)
 const { teleportDisabled, teleportTarget } = useTeleportTarget(toRef(props, 'teleport'))
 const { handleKeydown } = useFocusTrap(dialogRef, isActive)

@@ -2,7 +2,10 @@ import { defineComponent, nextTick, ref, toRef } from 'vue'
 import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
+  focusElementWithoutScroll,
+  focusFirstDescendant,
   getBodyScrollLockCount,
+  getFocusableElements,
   getOverlayStackIds,
   lockBodyScroll,
   resetBodyScrollLock,
@@ -64,6 +67,25 @@ const FocusTrapHarness = defineComponent({
       <button class="focus-second" type="button">Second</button>
     </div>
   `
+})
+
+const EmptyFocusTrapHarness = defineComponent({
+  props: {
+    active: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup(props) {
+    const containerRef = ref<HTMLElement>()
+    const { handleKeydown } = useFocusTrap(containerRef, toRef(props, 'active'))
+
+    return {
+      containerRef,
+      handleKeydown
+    }
+  },
+  template: '<div ref="containerRef" tabindex="-1" @keydown="handleKeydown" />'
 })
 
 describe('overlay utilities', () => {
@@ -158,6 +180,114 @@ describe('overlay utilities', () => {
     expect(document.activeElement).toBe(wrapper.get('.focus-first').element)
 
     await wrapper.setProps({ active: false })
+    await nextTick()
+
+    expect(document.activeElement).toBe(trigger)
+  })
+
+  it('filters hidden and disabled descendants when collecting focusable elements', () => {
+    const container = document.createElement('div')
+    container.innerHTML = `
+      <button type="button" aria-hidden="true">Hidden</button>
+      <button type="button" disabled>Disabled</button>
+      <div tabindex="-1">Negative tab index</div>
+      <button type="button" class="focusable">Visible</button>
+      <a class="link" href="#focus">Link</a>
+    `
+
+    const focusableElements = getFocusableElements(container)
+
+    expect(focusableElements).toHaveLength(2)
+    expect(focusableElements[0]?.className).toBe('focusable')
+    expect(focusableElements[1]?.className).toBe('link')
+  })
+
+  it('falls back to the container or explicit fallback when moving focus into a trap', async () => {
+    const container = document.createElement('div')
+    container.tabIndex = -1
+    document.body.appendChild(container)
+
+    await focusFirstDescendant(ref(container))
+    expect(document.activeElement).toBe(container)
+
+    const fallback = document.createElement('button')
+    document.body.appendChild(fallback)
+
+    await focusFirstDescendant(ref<HTMLElement | undefined>(undefined), fallback)
+    expect(document.activeElement).toBe(fallback)
+  })
+
+  it('falls back to the native focus call when preventScroll is unsupported', () => {
+    const button = document.createElement('button')
+    let focusCalls = 0
+
+    Object.defineProperty(button, 'focus', {
+      configurable: true,
+      value: vi.fn((options?: FocusOptions) => {
+        focusCalls += 1
+
+        if (options && 'preventScroll' in options) {
+          throw new Error('unsupported')
+        }
+      })
+    })
+
+    focusElementWithoutScroll(button)
+
+    expect(focusCalls).toBe(2)
+  })
+
+  it('cycles focus with Tab and Shift+Tab, and traps empty containers', async () => {
+    const wrapper = mount(FocusTrapHarness, {
+      attachTo: document.body,
+      props: {
+        active: true
+      }
+    })
+
+    await nextTick()
+
+    const firstButton = wrapper.get('.focus-first').element as HTMLButtonElement
+    const secondButton = wrapper.get('.focus-second').element as HTMLButtonElement
+
+    secondButton.focus()
+    await wrapper.get('[tabindex="-1"]').trigger('keydown', { key: 'Tab' })
+    expect(document.activeElement).toBe(firstButton)
+
+    firstButton.focus()
+    await wrapper.get('[tabindex="-1"]').trigger('keydown', { key: 'Tab', shiftKey: true })
+    expect(document.activeElement).toBe(secondButton)
+
+    const emptyWrapper = mount(EmptyFocusTrapHarness, {
+      attachTo: document.body,
+      props: {
+        active: true
+      }
+    })
+
+    await nextTick()
+
+    const emptyContainer = emptyWrapper.get('[tabindex="-1"]').element as HTMLElement
+    expect(document.activeElement).toBe(emptyContainer)
+
+    await emptyWrapper.get('[tabindex="-1"]').trigger('keydown', { key: 'Tab' })
+    expect(document.activeElement).toBe(emptyContainer)
+  })
+
+  it('restores focus on unmount when the trap is still active', async () => {
+    const trigger = document.createElement('button')
+    document.body.appendChild(trigger)
+    trigger.focus()
+
+    const wrapper = mount(FocusTrapHarness, {
+      attachTo: document.body,
+      props: {
+        active: true
+      }
+    })
+
+    await nextTick()
+    wrapper.unmount()
     await nextTick()
 
     expect(document.activeElement).toBe(trigger)

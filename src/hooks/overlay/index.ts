@@ -1,3 +1,4 @@
+export * from './a11y'
 export * from './click-outside'
 export * from './escape'
 export * from './focus-trap'

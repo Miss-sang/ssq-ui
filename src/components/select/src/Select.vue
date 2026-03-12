@@ -1,13 +1,16 @@
 <template>
   <div ref="rootRef" class="my-select" :class="selectClasses" :style="rootStyles">
     <div
+      :id="triggerId"
       ref="triggerRef"
       class="my-select__selector"
       role="combobox"
       :aria-expanded="isOpen"
       aria-haspopup="listbox"
+      :aria-autocomplete="props.filterable ? 'list' : undefined"
       :aria-controls="isOpen ? listboxId : undefined"
       :aria-activedescendant="activeDescendantId"
+      :aria-disabled="props.disabled"
       :tabindex="props.disabled ? -1 : 0"
       @click="handleSelectorClick"
       @keydown="handleSelectorKeydown"
@@ -32,11 +35,11 @@
         v-if="showClearButton"
         class="my-select__action"
         type="button"
-        aria-label="Clear selection"
+        aria-label="清空选择"
         @mousedown.prevent
         @click.stop="handleClear"
       >
-        <Icon mode="svg" size="14" label="Clear selection">
+        <Icon mode="svg" size="14" label="清空选择">
           <path
             d="M512 85.3c235.7 0 426.7 191 426.7 426.7S747.7 938.7 512 938.7 85.3 747.7 85.3 512 276.3 85.3 512 85.3zm0 85.4A341.3 341.3 0 1 0 512 853.3 341.3 341.3 0 0 0 512 170.7zm120.5 160.8a42.7 42.7 0 0 1 0 60.4L572.4 452l60.1 60.1a42.7 42.7 0 1 1-60.4 60.4L512 512.4l-60.1 60.1a42.7 42.7 0 1 1-60.4-60.4l60.1-60.1-60.1-60.1a42.7 42.7 0 1 1 60.4-60.4l60.1 60.1 60.1-60.1a42.7 42.7 0 0 1 60.4 0z"
           />
@@ -54,7 +57,7 @@
 
     <Teleport :to="teleportTarget" :disabled="teleportDisabled">
       <div v-if="isOpen" ref="panelRef" class="my-select__dropdown" :style="dropdownStyles">
-        <div v-if="props.loading" class="my-select__status">Loading...</div>
+        <div v-if="props.loading" class="my-select__status">加载中...</div>
 
         <template v-else-if="!filteredOptions.length">
           <div class="my-select__status">
@@ -70,6 +73,7 @@
           ref="listRef"
           class="my-select__list"
           role="listbox"
+          :aria-labelledby="triggerId"
           @scroll="handleListScroll"
         >
           <div
@@ -140,8 +144,10 @@ import { computed, nextTick, ref, toRef, watch } from 'vue'
 import Icon from '../../icon'
 import {
   createOverlayId,
+  focusElementWithoutScroll,
   useClickOutside,
   useEscapeKeydown,
+  useOverlayA11y,
   useOverlayStack,
   useTeleportTarget
 } from '../../../hooks/overlay'
@@ -195,6 +201,11 @@ const labelField = computed(() => props.fieldNames.label ?? 'label')
 const valueField = computed(() => props.fieldNames.value ?? 'value')
 const disabledField = computed(() => props.fieldNames.disabled ?? 'disabled')
 const listboxId = `${overlayId.value}-listbox`
+const { triggerId, captureTrigger } = useOverlayA11y('select-trigger', isOpen, {
+  labelled: false,
+  described: false,
+  triggerRef
+})
 const { stackIndex, isTopmost } = useOverlayStack(overlayId, isOpen)
 const { teleportDisabled, teleportTarget } = useTeleportTarget(toRef(props, 'teleport'))
 
@@ -374,6 +385,7 @@ watch(isOpen, async nextOpen => {
     await nextTick()
     await update()
     focusInputWhenNeeded()
+    captureTrigger(props.filterable ? inputRef.value : triggerRef.value)
     ensureActiveOptionVisible()
     return
   }
@@ -400,24 +412,12 @@ watch(filteredOptions, async () => {
   ensureActiveOptionVisible()
 })
 
-function focusWithPreventScroll(element: HTMLElement | undefined | null) {
-  if (!element) {
-    return
-  }
-
-  try {
-    element.focus({ preventScroll: true })
-  } catch {
-    element.focus()
-  }
-}
-
 function focusInputText(input: HTMLInputElement | undefined | null) {
   if (!input) {
     return
   }
 
-  focusWithPreventScroll(input)
+  focusElementWithoutScroll(input)
 
   if (typeof input.setSelectionRange === 'function') {
     try {
@@ -437,7 +437,7 @@ function focusInputWhenNeeded() {
     return
   }
 
-  focusWithPreventScroll(triggerRef.value)
+  focusElementWithoutScroll(triggerRef.value)
 }
 
 function resetSearchState() {
@@ -708,7 +708,7 @@ function handleClear(event: MouseEvent) {
   if (props.filterable) {
     searchQuery.value = ''
     hasTypedSinceOpen.value = true
-    focusWithPreventScroll(inputRef.value)
+    focusElementWithoutScroll(inputRef.value)
   }
 }
 
@@ -733,8 +733,8 @@ function getOptionClasses(option: NormalizedSelectOption, index: number) {
 const exposed: SelectExposes = {
   focus: () =>
     props.filterable
-      ? focusWithPreventScroll(inputRef.value)
-      : focusWithPreventScroll(triggerRef.value),
+      ? focusElementWithoutScroll(inputRef.value)
+      : focusElementWithoutScroll(triggerRef.value),
   blur: () => (props.filterable ? inputRef.value?.blur() : triggerRef.value?.blur()),
   open: async () => {
     await openPanel()

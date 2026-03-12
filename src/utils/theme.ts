@@ -16,12 +16,26 @@ export type ThemeMotion = 'system' | 'normal' | 'reduced'
 type ResolvedThemeMode = Exclude<ThemeMode, 'system'>
 type ResolvedThemeMotion = Exclude<ThemeMotion, 'system'>
 
+export interface ThemeTokenOverrides {
+  primary?: string
+  radiusXs?: string
+  radiusSm?: string
+  radiusMd?: string
+  radiusLg?: string
+  spacingXs?: string
+  spacingSm?: string
+  spacingMd?: string
+  spacingLg?: string
+  spacingXl?: string
+}
+
 export interface ThemeConfig {
   mode: ThemeMode
   preset: ThemePreset
   primary: string
   radius: ThemeRadius
   motion: ThemeMotion
+  overrides: ThemeTokenOverrides
 }
 
 export interface ResolvedTheme extends ThemeConfig {
@@ -45,8 +59,11 @@ export interface ThemeController {
   setPrimary: (primary: string) => ThemeConfig
   setRadius: (radius: ThemeRadius) => ThemeConfig
   setMotion: (motion: ThemeMotion) => ThemeConfig
+  setOverrides: (overrides: Partial<ThemeTokenOverrides>) => ThemeConfig
+  resetOverrides: () => ThemeConfig
   reset: () => ThemeConfig
   exportTokens: () => ThemeTokenMap
+  exportThemeConfig: () => ThemeConfig
 }
 
 const managedTokenNames = [
@@ -64,6 +81,11 @@ const managedTokenNames = [
   '--my-border-radius-sm',
   '--my-border-radius-md',
   '--my-border-radius-lg',
+  '--my-spacing-xs',
+  '--my-spacing-sm',
+  '--my-spacing-md',
+  '--my-spacing-lg',
+  '--my-spacing-xl',
   '--my-transition-duration-base',
   '--my-motion-ripple-duration',
   '--my-motion-spin-duration'
@@ -78,6 +100,17 @@ const presetPrimaryMap: Record<ThemePreset, string> = {
   forest: '#2f9e44',
   sunset: '#f97316'
 }
+
+const spacingTokenMap = {
+  '--my-spacing-xs': '4px',
+  '--my-spacing-sm': '8px',
+  '--my-spacing-md': '16px',
+  '--my-spacing-lg': '24px',
+  '--my-spacing-xl': '32px'
+} satisfies Pick<
+  ThemeTokenMap,
+  '--my-spacing-xs' | '--my-spacing-sm' | '--my-spacing-md' | '--my-spacing-lg' | '--my-spacing-xl'
+>
 
 const radiusTokenMap: Record<
   ThemeRadius,
@@ -125,12 +158,15 @@ const motionTokenMap: Record<
   }
 }
 
+const emptyThemeOverrides: ThemeTokenOverrides = {}
+
 const defaultThemeConfig: ThemeConfig = {
   mode: 'system',
   preset: 'default',
   primary: presetPrimaryMap.default,
   radius: 'default',
-  motion: 'system'
+  motion: 'system',
+  overrides: emptyThemeOverrides
 }
 
 const defaultThemeManagerOptions: ThemeManagerOptions = {
@@ -167,30 +203,50 @@ function normalizeHexColor(value: string, fallback: string) {
       return fallback
     }
 
-    const [r, g, b] = shortHexValue.split('')
+    const [red, green, blue] = shortHexValue.split('')
 
-    if (!r || !g || !b) {
+    if (!red || !green || !blue) {
       return fallback
     }
 
-    return `#${r}${r}${g}${g}${b}${b}`
+    return `#${red}${red}${green}${green}${blue}${blue}`
   }
 
   return /^#([0-9a-f]{6})$/i.test(input) ? input : fallback
+}
+
+function normalizeLengthToken(value: string | undefined, fallback: string) {
+  if (!value) {
+    return fallback
+  }
+
+  const normalized = value.trim()
+
+  if (/^\d+(\.\d+)?$/.test(normalized)) {
+    return `${normalized}px`
+  }
+
+  if (/^\d+(\.\d+)?(px|rem|em|%)$/.test(normalized)) {
+    return normalized
+  }
+
+  return fallback
 }
 
 function hexToRgb(color: string) {
   const normalized = normalizeHexColor(color, '#000000')
 
   return {
-    r: Number.parseInt(normalized.slice(1, 3), 16),
-    g: Number.parseInt(normalized.slice(3, 5), 16),
-    b: Number.parseInt(normalized.slice(5, 7), 16)
+    red: Number.parseInt(normalized.slice(1, 3), 16),
+    green: Number.parseInt(normalized.slice(3, 5), 16),
+    blue: Number.parseInt(normalized.slice(5, 7), 16)
   }
 }
 
 function rgbToHex(red: number, green: number, blue: number) {
-  const toHex = (value: number) => Math.max(0, Math.min(255, Math.round(value))).toString(16).padStart(2, '0')
+  const toHex = (value: number) =>
+    Math.max(0, Math.min(255, Math.round(value))).toString(16).padStart(2, '0')
+
   return `#${toHex(red)}${toHex(green)}${toHex(blue)}`
 }
 
@@ -199,9 +255,9 @@ function mixColor(base: string, target: string, amount: number) {
   const to = hexToRgb(target)
 
   return rgbToHex(
-    from.r + (to.r - from.r) * amount,
-    from.g + (to.g - from.g) * amount,
-    from.b + (to.b - from.b) * amount
+    from.red + (to.red - from.red) * amount,
+    from.green + (to.green - from.green) * amount,
+    from.blue + (to.blue - from.blue) * amount
   )
 }
 
@@ -234,10 +290,96 @@ function createPrimaryTokens(primary: string): Pick<
   }
 }
 
+function normalizeThemeOverrides(input: Partial<ThemeTokenOverrides> | undefined) {
+  const primarySeed = input?.primary
+  const normalized: ThemeTokenOverrides = {}
+
+  if (primarySeed) {
+    normalized.primary = normalizeHexColor(primarySeed, presetPrimaryMap.default)
+  }
+
+  const radiusKeys = [
+    ['radiusXs', '--my-border-radius-xs'],
+    ['radiusSm', '--my-border-radius-sm'],
+    ['radiusMd', '--my-border-radius-md'],
+    ['radiusLg', '--my-border-radius-lg']
+  ] as const
+
+  for (const [overrideKey, tokenKey] of radiusKeys) {
+    const value = input?.[overrideKey]
+
+    if (value) {
+      normalized[overrideKey] = normalizeLengthToken(value, radiusTokenMap.default[tokenKey])
+    }
+  }
+
+  const spacingKeys = [
+    ['spacingXs', '--my-spacing-xs'],
+    ['spacingSm', '--my-spacing-sm'],
+    ['spacingMd', '--my-spacing-md'],
+    ['spacingLg', '--my-spacing-lg'],
+    ['spacingXl', '--my-spacing-xl']
+  ] as const
+
+  for (const [overrideKey, tokenKey] of spacingKeys) {
+    const value = input?.[overrideKey]
+
+    if (value) {
+      normalized[overrideKey] = normalizeLengthToken(value, spacingTokenMap[tokenKey])
+    }
+  }
+
+  return normalized
+}
+
+function mergeThemeOverrides(
+  currentOverrides: ThemeTokenOverrides,
+  patchOverrides: Partial<ThemeTokenOverrides> | undefined
+) {
+  if (!patchOverrides) {
+    return normalizeThemeOverrides(currentOverrides)
+  }
+
+  const mergedOverrides: ThemeTokenOverrides = { ...currentOverrides }
+
+  for (const [key, value] of Object.entries(patchOverrides) as Array<
+    [keyof ThemeTokenOverrides, string | undefined]
+  >) {
+    if (value === undefined || value === '') {
+      delete mergedOverrides[key]
+      continue
+    }
+
+    mergedOverrides[key] = value
+  }
+
+  return normalizeThemeOverrides(mergedOverrides)
+}
+
+function resolvePrimarySeed(config: ThemeConfig) {
+  return config.overrides.primary ?? config.primary
+}
+
 function createThemeTokens(config: ThemeConfig): ThemeTokenMap {
+  const resolvedOverrides = normalizeThemeOverrides(config.overrides)
+
   return {
-    ...createPrimaryTokens(config.primary),
+    ...createPrimaryTokens(resolvePrimarySeed(config)),
     ...radiusTokenMap[config.radius],
+    '--my-border-radius-xs':
+      resolvedOverrides.radiusXs ?? radiusTokenMap[config.radius]['--my-border-radius-xs'],
+    '--my-border-radius-sm':
+      resolvedOverrides.radiusSm ?? radiusTokenMap[config.radius]['--my-border-radius-sm'],
+    '--my-border-radius-md':
+      resolvedOverrides.radiusMd ?? radiusTokenMap[config.radius]['--my-border-radius-md'],
+    '--my-border-radius-lg':
+      resolvedOverrides.radiusLg ?? radiusTokenMap[config.radius]['--my-border-radius-lg'],
+    ...spacingTokenMap,
+    '--my-spacing-xs': resolvedOverrides.spacingXs ?? spacingTokenMap['--my-spacing-xs'],
+    '--my-spacing-sm': resolvedOverrides.spacingSm ?? spacingTokenMap['--my-spacing-sm'],
+    '--my-spacing-md': resolvedOverrides.spacingMd ?? spacingTokenMap['--my-spacing-md'],
+    '--my-spacing-lg': resolvedOverrides.spacingLg ?? spacingTokenMap['--my-spacing-lg'],
+    '--my-spacing-xl': resolvedOverrides.spacingXl ?? spacingTokenMap['--my-spacing-xl'],
     ...motionTokenMap[resolveThemeMotion(config.motion)]
   }
 }
@@ -267,7 +409,10 @@ function resolveThemeMotion(motion: ThemeMotion): ResolvedThemeMotion {
 }
 
 function getThemeSnapshot(): ThemeConfig {
-  return { ...themeState }
+  return {
+    ...themeState,
+    overrides: { ...themeState.overrides }
+  }
 }
 
 function getResolvedThemeSnapshot(): ResolvedTheme {
@@ -279,6 +424,19 @@ function getResolvedThemeSnapshot(): ResolvedTheme {
     isDark: resolvedModeState.value === 'dark',
     tokens: createThemeTokens(snapshot)
   }
+}
+
+function normalizeThemeConfig(input: Partial<ThemeConfig>) {
+  const preset = input.preset ?? defaultThemeConfig.preset
+
+  return {
+    mode: input.mode ?? defaultThemeConfig.mode,
+    preset,
+    primary: normalizeHexColor(input.primary ?? presetPrimaryMap[preset], presetPrimaryMap[preset]),
+    radius: input.radius ?? defaultThemeConfig.radius,
+    motion: input.motion ?? defaultThemeConfig.motion,
+    overrides: normalizeThemeOverrides(input.overrides)
+  } satisfies ThemeConfig
 }
 
 function readPersistedThemeConfig(storageKey: string): ThemeConfig | null {
@@ -359,37 +517,27 @@ function emitThemeChange() {
 }
 
 function setThemeState(nextTheme: ThemeConfig) {
-  const changed = (
+  const changed =
     nextTheme.mode !== themeState.mode ||
     nextTheme.preset !== themeState.preset ||
     nextTheme.primary !== themeState.primary ||
     nextTheme.radius !== themeState.radius ||
-    nextTheme.motion !== themeState.motion
-  )
+    nextTheme.motion !== themeState.motion ||
+    JSON.stringify(nextTheme.overrides) !== JSON.stringify(themeState.overrides)
 
   if (!changed) {
     applyThemeToDocument()
     return getThemeSnapshot()
   }
 
-  Object.assign(themeState, nextTheme)
+  Object.assign(themeState, nextTheme, {
+    overrides: { ...nextTheme.overrides }
+  })
   applyThemeToDocument()
   persistThemeConfig()
   emitThemeChange()
 
   return getThemeSnapshot()
-}
-
-function normalizeThemeConfig(input: Partial<ThemeConfig>) {
-  const preset = input.preset ?? defaultThemeConfig.preset
-
-  return {
-    mode: input.mode ?? defaultThemeConfig.mode,
-    preset,
-    primary: normalizeHexColor(input.primary ?? presetPrimaryMap[preset], presetPrimaryMap[preset]),
-    radius: input.radius ?? defaultThemeConfig.radius,
-    motion: input.motion ?? defaultThemeConfig.motion
-  } satisfies ThemeConfig
 }
 
 function createNextThemeConfig(patch: Partial<ThemeConfig>) {
@@ -401,13 +549,15 @@ function createNextThemeConfig(patch: Partial<ThemeConfig>) {
     patch.primary ?? (patch.preset ? presetPrimaryMap[nextPreset] : themeState.primary),
     presetPrimaryMap[nextPreset]
   )
+  const nextOverrides = mergeThemeOverrides(themeState.overrides, patch.overrides)
 
   return {
     mode: nextMode,
     preset: nextPreset,
     primary: nextPrimary,
     radius: nextRadius,
-    motion: nextMotion
+    motion: nextMotion,
+    overrides: nextOverrides
   } satisfies ThemeConfig
 }
 
@@ -443,7 +593,9 @@ function hydrateThemeFromStorage() {
   const savedTheme = readPersistedThemeConfig(themeManagerOptions.storageKey)
 
   if (savedTheme) {
-    Object.assign(themeState, savedTheme)
+    Object.assign(themeState, savedTheme, {
+      overrides: { ...savedTheme.overrides }
+    })
   }
 }
 
@@ -467,16 +619,18 @@ export function configureThemeManager(options: Partial<ThemeManagerOptions> = {}
     storageKey: options.storageKey ?? themeManagerOptions.storageKey
   })
 
-  const shouldHydrateFromStorage = themeManagerOptions.persist && (
-    previousOptions.storageKey !== themeManagerOptions.storageKey ||
-    previousOptions.persist !== themeManagerOptions.persist
-  )
+  const shouldHydrateFromStorage =
+    themeManagerOptions.persist &&
+    (previousOptions.storageKey !== themeManagerOptions.storageKey ||
+      previousOptions.persist !== themeManagerOptions.persist)
 
   if (shouldHydrateFromStorage) {
     const savedTheme = readPersistedThemeConfig(themeManagerOptions.storageKey)
 
     if (savedTheme) {
-      Object.assign(themeState, savedTheme)
+      Object.assign(themeState, savedTheme, {
+        overrides: { ...savedTheme.overrides }
+      })
     }
   }
 
@@ -519,7 +673,15 @@ export function getThemeController(): ThemeController {
     },
     setPrimary(primary) {
       ensureThemeManager()
-      return setThemeState(createNextThemeConfig({ primary }))
+      return setThemeState(
+        createNextThemeConfig({
+          primary,
+          overrides: {
+            ...themeState.overrides,
+            primary: undefined
+          }
+        })
+      )
     },
     setRadius(radius) {
       ensureThemeManager()
@@ -529,13 +691,38 @@ export function getThemeController(): ThemeController {
       ensureThemeManager()
       return setThemeState(createNextThemeConfig({ motion }))
     },
+    setOverrides(overrides) {
+      ensureThemeManager()
+      return setThemeState(
+        createNextThemeConfig({
+          overrides: {
+            ...themeState.overrides,
+            ...overrides
+          }
+        })
+      )
+    },
+    resetOverrides() {
+      ensureThemeManager()
+      return setThemeState({
+        ...getThemeSnapshot(),
+        overrides: {}
+      })
+    },
     reset() {
       ensureThemeManager()
-      return setThemeState({ ...defaultThemeConfig })
+      return setThemeState({
+        ...defaultThemeConfig,
+        overrides: {}
+      })
     },
     exportTokens() {
       ensureThemeManager()
       return createThemeTokens(themeState)
+    },
+    exportThemeConfig() {
+      ensureThemeManager()
+      return getThemeSnapshot()
     }
   }
 }
@@ -554,9 +741,7 @@ export const getCurrentTheme = () => {
   return themeState.mode
 }
 
-export const applyTheme = (mode: ThemeMode = 'system') => {
-  return getThemeController().setMode(mode)
-}
+export const applyTheme = (mode: ThemeMode = 'system') => getThemeController().setMode(mode)
 
 export const watchSystemTheme = () => {
   ensureThemeManager()
@@ -573,7 +758,9 @@ export function resetThemeManager() {
   stopEnvironmentListeners = () => {}
   subscribers.clear()
   Object.assign(themeManagerOptions, defaultThemeManagerOptions)
-  Object.assign(themeState, defaultThemeConfig)
+  Object.assign(themeState, defaultThemeConfig, {
+    overrides: {}
+  })
   resolvedModeState.value = 'light'
   resolvedMotionState.value = 'normal'
   initialized = false

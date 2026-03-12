@@ -11,7 +11,7 @@
       <article class="theme-lab-state-card">
         <header>
           <h3>Button</h3>
-          <span>default / loading / disabled</span>
+          <span>默认 / 加载 / 禁用</span>
         </header>
 
         <div class="theme-lab-state-stack">
@@ -33,7 +33,7 @@
       <article class="theme-lab-state-card">
         <header>
           <h3>Input</h3>
-          <span>default / focus / disabled / password</span>
+          <span>默认 / 聚焦 / 禁用 / 密码</span>
         </header>
 
         <div class="theme-lab-state-stack">
@@ -68,7 +68,7 @@
       <article class="theme-lab-state-card theme-lab-state-card--wide">
         <header>
           <h3>Select</h3>
-          <span>default / open / filterable / empty / disabled</span>
+          <span>默认 / 展开 / 可搜索 / 空状态 / 禁用</span>
         </header>
 
         <div class="theme-lab-wide-layout">
@@ -140,7 +140,7 @@
       <article class="theme-lab-state-card theme-lab-state-card--wide">
         <header>
           <h3>Dialog</h3>
-          <span>closed preview / open with footer</span>
+          <span>关闭预览 / 带页脚的打开态</span>
         </header>
 
         <div class="theme-lab-wide-layout theme-lab-wide-layout--dialog">

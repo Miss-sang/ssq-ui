@@ -208,6 +208,27 @@ describe('MyDialog', () => {
     expect(document.activeElement).toBe(trigger)
   })
 
+  it('focuses the first body control and omits aria-labelledby when no header is rendered', async () => {
+    mount(Dialog, {
+      attachTo: document.body,
+      props: {
+        open: true,
+        title: '',
+        showClose: false
+      },
+      slots: {
+        default: '<input class="dialog-input" />'
+      }
+    })
+
+    await nextTick()
+
+    const dialog = document.body.querySelector('.my-dialog') as HTMLElement | null
+
+    expect(dialog?.getAttribute('aria-labelledby')).toBeNull()
+    expect(document.activeElement).toBe(document.body.querySelector('.dialog-input'))
+  })
+
   it('removes body scroll lock after close', async () => {
     const wrapper = mount(Dialog, {
       attachTo: document.body,
@@ -318,6 +339,33 @@ describe('MyDialog', () => {
     expect(wrapper.emitted('update:open')?.[0]).toEqual([false])
   })
 
+  it('ignores overlapping close requests while beforeClose is pending', async () => {
+    const deferred = createDeferred<boolean>()
+    const beforeClose = vi.fn(() => deferred.promise)
+    const wrapper = mount(Dialog, {
+      attachTo: document.body,
+      props: {
+        open: true,
+        beforeClose
+      }
+    })
+
+    const overlay = document.body.querySelector('.my-dialog__overlay') as HTMLElement | null
+
+    overlay?.click()
+    overlay?.click()
+    await nextTick()
+
+    expect(beforeClose).toHaveBeenCalledTimes(1)
+    expect(wrapper.emitted('update:open')).toBeUndefined()
+
+    deferred.resolve(true)
+    await deferred.promise
+    await nextTick()
+
+    expect(wrapper.emitted('update:open')?.[0]).toEqual([false])
+  })
+
   it('adds the required aria attributes', () => {
     mount(Dialog, {
       attachTo: document.body,
@@ -332,5 +380,6 @@ describe('MyDialog', () => {
     expect(dialog?.getAttribute('role')).toBe('dialog')
     expect(dialog?.getAttribute('aria-modal')).toBe('true')
     expect(dialog?.getAttribute('aria-labelledby')).toContain('dialog-')
+    expect(dialog?.getAttribute('aria-describedby')).toContain('dialog-')
   })
 })

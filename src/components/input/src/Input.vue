@@ -29,11 +29,11 @@
         v-if="showClearButton"
         class="my-input__action my-input__clear"
         type="button"
-        aria-label="Clear input"
+        aria-label="清空输入"
         @mousedown.prevent
         @click.stop="handleClear"
       >
-        <Icon mode="svg" size="14" color="currentColor" label="Clear input">
+        <Icon mode="svg" size="14" color="currentColor" label="清空输入">
           <path
             d="M512 85.3c235.7 0 426.7 191 426.7 426.7S747.7 938.7 512 938.7 85.3 747.7 85.3 512 276.3 85.3 512 85.3zm0 85.4A341.3 341.3 0 1 0 512 853.3 341.3 341.3 0 0 0 512 170.7zm120.5 160.8a42.7 42.7 0 0 1 0 60.4L572.4 452l60.1 60.1a42.7 42.7 0 1 1-60.4 60.4L512 512.4l-60.1 60.1a42.7 42.7 0 1 1-60.4-60.4l60.1-60.1-60.1-60.1a42.7 42.7 0 1 1 60.4-60.4l60.1 60.1 60.1-60.1a42.7 42.7 0 0 1 60.4 0z"
           />
@@ -104,9 +104,7 @@ const resolvedInputType = computed(() => {
 
   return props.type
 })
-const passwordToggleLabel = computed(() =>
-  isPasswordVisible.value ? 'Hide password' : 'Show password'
-)
+const passwordToggleLabel = computed(() => (isPasswordVisible.value ? '隐藏密码' : '显示密码'))
 
 const inputClasses = computed(() => [
   `my-input--${props.size}`,
